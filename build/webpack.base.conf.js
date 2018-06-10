@@ -4,8 +4,8 @@ const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 
-function resolve (dir) {
-  return path.join(__dirname, '..', dir)
+function resolve (dir = '') {
+  return path.join(__dirname, '../src', dir)
 }
 
 const createLintingRule = () => ({
@@ -22,7 +22,7 @@ const createLintingRule = () => ({
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './src/main.js'
+    app: './src/app/main.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -34,8 +34,17 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'),
+      'vue$'        : 'vue/dist/vue.esm.js',
+      '@'           : resolve(),
+
+      // app
+      'views'       : resolve('app/views'),
+      'components'  : resolve('app/components'),
+
+      // core
+      'app'         : resolve('app'),
+      'core'        : resolve('core'),
+      'res'         : resolve('res'),
     }
   },
   module: {
