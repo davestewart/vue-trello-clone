@@ -13,7 +13,7 @@
         @drop="onListDrop"
       >
         <Draggable v-for="list in lists" :key="list.id">
-          <section class="list-container" ref="list">
+          <section class="list-container" ref="list" :data-id="list.id">
 
             <div class="list-header">
               <span class="list-drag-handle">&#x2630;</span>

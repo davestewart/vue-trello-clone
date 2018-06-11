@@ -3,7 +3,7 @@ const uuidv1 = require('uuid/v1')
 /**
  * Helper function to update array on drop
  *
- * @param {array}   oldArray    The array to be altered
+ * @param {array}   oldArray      The array to be altered
  * @param {number}  removedIndex  The index the element moved from
  * @param {number}  addedIndex    The index the element moved to
  * @param {*}       payload       Any payload associated with the move
@@ -28,6 +28,10 @@ export function updateArray (oldArray, removedIndex, addedIndex, payload) {
 
 export function getListById (lists, listId) {
   return lists.find(list => list.id === listId)
+}
+
+export function getListByItemId (lists, itemId) {
+  return lists.find(list => list.items.find(item => item.id === itemId))
 }
 
 export function card (title, description, date) {

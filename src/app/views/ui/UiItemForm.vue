@@ -20,7 +20,7 @@
                 @enter="submit"
       />
       <div class="field is-grouped">
-        <ui-button @click="submit">Add</ui-button>
+        <ui-button type="primary" @click="submit">Add</ui-button>
         <ui-button type="text" @click="cancel">Cancel</ui-button>
       </div>
     </div>

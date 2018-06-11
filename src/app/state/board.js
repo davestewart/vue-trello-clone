@@ -1,4 +1,4 @@
-import { getListById, updateArray, card, list, dummy } from 'app/utils/board'
+import { getListById, getListByItemId, updateArray, card, list, dummy } from 'app/utils/board'
 
 const storage = window.localStorage
 
@@ -9,6 +9,10 @@ const state = {
 const getters = {
   getListById: state => listId => {
     return getListById(state.lists, listId)
+  },
+
+  getListByItemId: state => itemId => {
+    return getListByItemId(state.lists, itemId)
   },
 }
 
@@ -39,7 +43,8 @@ const mutations = {
   },
 
   removeList (state, { listId }) {
-    // not implemented
+    const index = state.lists.findIndex(list => list.id === listId)
+    state.lists.splice(index, 1)
   },
 
   addItem (state, { listId, title, description, date }) {
@@ -61,7 +66,8 @@ const mutations = {
   },
 
   removeItem (state, { itemId }) {
-    // not implemented
+    const list = getListByItemId(state.lists, itemId)
+    list.items.splice(list.items.findIndex(item => item.id === itemId), 1)
   }
 }
 

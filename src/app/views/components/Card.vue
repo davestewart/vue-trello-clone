@@ -1,6 +1,6 @@
 <template>
 
-  <div class="card" :class="classes">
+  <div class="card" :class="classes" :data-id="item.id">
     <span v-if="isDue" class="icon has-text-warning">
       <i class="fas fa-star"></i>
     </span>
