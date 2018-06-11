@@ -1,29 +1,30 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div>
+      <h1 class="is-size-3">Tasks</h1>
+      <p class="subtitle is-6">Add lists and items by typing in the edit boxes. To enter further details, CMD or CTRL Enter</p>
     </div>
-    <router-view/>
+    <div>
+      <board/>
+    </div>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+<script>
+import Board from 'components/Board'
+export default {
+  components: {
+    Board
   }
 }
+</script>
+
+<style lang="scss">
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    padding: 20px;
+  }
 </style>
