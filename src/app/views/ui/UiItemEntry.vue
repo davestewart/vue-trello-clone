@@ -4,8 +4,12 @@
     <div class="control is-expanded">
       <input class="input" v-model.trim="input" :placeholder="placeholder" @keydown.enter="onEnter"/>
     </div>
-    <div class="control" v-if="button">
-      <button type="submit" class="button is-primary" @click="onClick" v-html="button"></button>
+    <div class="control" v-if="icon">
+      <button type="submit" class="button is-primary" @click="onClick" :disabled="input.length === 0">
+        <span class="icon is-small">
+          <i :class="`fas fa-${icon}`"></i>
+        </span>
+      </button>
     </div>
   </div>
 
@@ -20,9 +24,9 @@ export default {
   props: {
     listId: [String, Number],
     placeholder: String,
-    button: {
+    icon: {
       type: String,
-      default: '&hellip;'
+      default: 'angle-right'
     }
   },
 

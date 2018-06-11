@@ -2,7 +2,7 @@
   <div id="app">
     <div>
       <h1 class="is-size-3">Tasks</h1>
-      <p class="subtitle is-6">Add lists and items by typing in the edit boxes. To enter further details, CMD or CTRL Enter</p>
+      <p class="subtitle is-6">Add lists and items by typing in the edit boxes. To enter further details, CMD or CTRL Enter.</p>
     </div>
     <div>
       <board/>

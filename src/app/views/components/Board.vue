@@ -2,6 +2,10 @@
   <div class="board-container">
     <div class="board">
 
+      <div class="clear-button">
+        <ui-button :disabled="lists.length === 0" @click="reset">Reset</ui-button>
+      </div>
+
       <Container
         lock-axis="x"
         orientation="horizontal"
@@ -33,6 +37,7 @@
             <div class="item-entry">
               <ui-item-entry :list-id="list.id"
                              placeholder="Add an item"
+                             icon="edit"
                              @enter="onAddItem"/>
             </div>
 
@@ -42,7 +47,8 @@
 
         <Draggable>
           <section class="new-list">
-            <input placeholder="Add a list" class="input" @keydown.enter="onAddList"/>
+            <ui-item-entry placeholder="Add a list"
+                           @enter="onAddList"/>
           </section>
         </Draggable>
 
@@ -93,10 +99,6 @@ export default {
     }
   },
 
-  mounted () {
-    this.$store.dispatch('load', true)
-  },
-
   methods: {
     onListDrop: function (event) {
       this.$store.commit('moveList', event)
@@ -108,10 +110,8 @@ export default {
       }
     },
 
-    onAddList (event) {
-      const title = event.target.value
-      event.target.value = ''
-      this.$store.commit('addList', {title})
+    onAddList ({text}) {
+      this.$store.commit('addList', { title: text })
       this.$nextTick(() => {
         const lists = this.$refs.list
         lists[lists.length - 1]
@@ -120,7 +120,7 @@ export default {
       })
     },
 
-    onAddItem ({id, text, more}) {
+    onAddItem ({ id, text, more }) {
       if (more) {
         this.activeListId = id
         this.modal = true
@@ -159,6 +159,12 @@ export default {
       const index = this.lists.findIndex(list => list.id === listId)
       this.$refs.list[index].querySelector('input').focus()
     },
+
+    reset () {
+      if (confirm('Are you sure you want to reset the board?')) {
+        this.$store.commit('reset')
+      }
+    }
   }
 }
 </script>
@@ -217,4 +223,9 @@ export default {
     border-top: 1px solid #DDD;
   }
 
+  .clear-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
 </style>

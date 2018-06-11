@@ -1,24 +1,6 @@
-import { getListById, updateArray2 as updateArray, card, list } from 'app/utils/board'
+import { getListById, updateArray, card, list, dummy } from 'app/utils/board'
 
 const storage = window.localStorage
-
-const dummy = [
-  list('One', [
-    card('1 1'),
-    card('1 2'),
-    card('1 3'),
-  ]),
-  list('Two', [
-    card('2 1'),
-    card('2 2'),
-    card('2 3'),
-  ]),
-  list('Three', [
-    card('3 1'),
-    card('3 2'),
-    card('3 3'),
-  ]),
-]
 
 const state = {
   lists: [],
@@ -33,7 +15,7 @@ const getters = {
 const actions = {
   load ({ commit }, mock) {
     const lists = mock
-      ? dummy
+      ? dummy()
       : storage.getItem('lists')
     commit('lists', lists || [])
   },
@@ -42,6 +24,10 @@ const actions = {
 const mutations = {
   lists (state, value) {
     state.lists = value
+  },
+
+  reset (state) {
+    state.lists = []
   },
 
   addList (state, { title }) {
