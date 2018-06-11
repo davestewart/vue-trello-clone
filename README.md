@@ -1,6 +1,6 @@
-# trello
+# Vue Trello Clone
 
-> A simple Trello clone
+> A simple Trello clone in Vue, Vuex and Bulma
 
 ## Build Setup
 
