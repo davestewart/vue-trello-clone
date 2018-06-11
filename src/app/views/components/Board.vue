@@ -71,41 +71,6 @@ import Card from './Card'
 import UiItemForm from '../ui/UiItemForm'
 import UiItemEntry from '../ui/UiItemEntry'
 
-import { updateArray } from 'app/utils/board'
-
-let id = 0
-
-function card (title, description, date) {
-  id++
-  if (date) {
-    date = Number(new Date(date))
-  }
-  return {id, title, description, date}
-}
-
-function list (title, items = []) {
-  id++
-  return {id, title, items}
-}
-
-const dummy = [
-  list('One', [
-    card('1 1'),
-    card('1 2'),
-    card('1 3'),
-  ]),
-  list('Two', [
-    card('2 1'),
-    card('2 2'),
-    card('2 3'),
-  ]),
-  list('Three', [
-    card('3 1'),
-    card('3 2'),
-    card('3 3'),
-  ]),
-]
-
 export default {
   components: {
     Container,
@@ -119,34 +84,40 @@ export default {
     return {
       modal: false,
       activeListId: null,
-      lists: dummy
     }
+  },
+
+  computed: {
+    lists () {
+      return this.$store.state.board.lists
+    }
+  },
+
+  mounted () {
+    this.$store.dispatch('load', true)
   },
 
   methods: {
     onListDrop: function (event) {
-      this.lists = updateArray(this.lists, event)
+      this.$store.commit('moveList', event)
     },
 
     onCardDrop: function (listId, event) {
       if (event.removedIndex !== null || event.addedIndex !== null) {
-        // find containing list of item
-        const list = this.getListById(listId)
-
-        // copy list and move item
-        const newList = Object.assign({}, list)
-        newList.items = updateArray(newList.items, event)
-
-        // replace old list with copy
-        const listIndex = this.lists.indexOf(list)
-        this.lists.splice(listIndex, 1, newList)
+        this.$store.commit('moveItem', { listId, ...event })
       }
     },
 
     onAddList (event) {
-      const text = event.target.value
+      const title = event.target.value
       event.target.value = ''
-      this.addList(text)
+      this.$store.commit('addList', {title})
+      this.$nextTick(() => {
+        const lists = this.$refs.list
+        lists[lists.length - 1]
+          .querySelector('input')
+          .focus()
+      })
     },
 
     onAddItem ({id, text, more}) {
@@ -160,11 +131,11 @@ export default {
         })
         return
       }
-      this.addCard(id, text)
+      this.addItem(id, text)
     },
 
     onAddFullItem (data) {
-      this.addCard(this.activeListId, data.title, data.description, data.date)
+      this.addItem(this.activeListId, data.title, data.description, data.date)
       this.onModalClose()
     },
 
@@ -173,28 +144,15 @@ export default {
       this.modal = false
     },
 
+    addItem (listId, title, description, date) {
+      this.$store.commit('addItem', { listId, title, description, date })
+    },
+
     getItemPayload: function (listId) {
       return index => {
-        return this.getListById(listId).items[index]
+        const list = this.$store.getters['getListById'](listId)
+        return list.items[index]
       }
-    },
-
-    getListById (listId) {
-      return this.lists.find(list => list.id === listId)
-    },
-
-    addList (text) {
-      this.lists.push(list(text))
-      this.$nextTick(() => {
-        const lists = this.$refs.list
-        lists[lists.length - 1]
-          .querySelector('input')
-          .focus()
-      })
-    },
-
-    addCard (listId, text, description, date) {
-      this.getListById(listId).items.push(card(text, description, date))
     },
 
     focusInput (listId) {
