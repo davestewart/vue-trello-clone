@@ -45,36 +45,19 @@
             <input placeholder="Add a list" class="input" @keydown.enter="onAddList"/>
           </section>
         </Draggable>
+
       </Container>
 
     </div>
 
-    <ui-modal :active="modal" @close="modal = false" ref="modal">
-      <div class="query-form card">
-        <div class="card-content">
-          <h2 class="title">New task</h2>
-          <ui-input ref="title"
-                    label="Title"
-                    v-model="form.title"
-                    @enter="onAddFullItem"
-          />
-          <ui-input ref="description"
-                    label="Description"
-                    v-model="form.description"
-                    type="textarea"
-          />
-          <ui-input ref="date"
-                    label="Date"
-                    v-model="form.date"
-                    type="date"
-                    @enter="onAddFullItem"
-          />
-          <div class="field is-grouped">
-            <ui-button @click="onAddFullItem">Add</ui-button>
-            <ui-button type="text" @click="onCancelFullItem">Cancel</ui-button>
-          </div>
-        </div>
-      </div>
+    <ui-modal ref="modal"
+              :active="modal"
+              :cancellable="1"
+              @close="onModalClose"
+    >
+      <UiItemForm ref="form"
+                  @submit="onAddFullItem"
+                  @cancel="onModalClose"/>
     </ui-modal>
 
   </div>
@@ -83,11 +66,12 @@
 
 <script>
 import { Container, Draggable } from 'vue-smooth-dnd'
-import { applyDrag } from 'app/utils/board'
 
 import Card from './Card'
 import UiItemForm from '../ui/UiItemForm'
 import UiItemEntry from '../ui/UiItemEntry'
+
+import { updateArray } from 'app/utils/board'
 
 let id = 0
 
@@ -122,35 +106,26 @@ const dummy = [
   ]),
 ]
 
-function form () {
-  return {
-    listId: null,
-    title: '',
-    description: '',
-    date: null
-  }
-}
-
 export default {
   components: {
     Container,
     Draggable,
-    Card,
     UiItemEntry,
     UiItemForm,
+    Card,
   },
 
   data: function () {
     return {
       modal: false,
-      form: form(),
+      activeListId: null,
       lists: dummy
     }
   },
 
   methods: {
     onListDrop: function (event) {
-      this.lists = applyDrag(this.lists, event)
+      this.lists = updateArray(this.lists, event)
     },
 
     onCardDrop: function (listId, event) {
@@ -160,7 +135,7 @@ export default {
 
         // copy list and move item
         const newList = Object.assign({}, list)
-        newList.items = applyDrag(newList.items, event)
+        newList.items = updateArray(newList.items, event)
 
         // replace old list with copy
         const listIndex = this.lists.indexOf(list)
@@ -176,27 +151,25 @@ export default {
 
     onAddItem ({id, text, more}) {
       if (more) {
+        this.activeListId = id
         this.modal = true
-        this.form.title = text
-        this.form.listId = id
         this.$nextTick(() => {
-          // focus first modal field
-          this.$refs.modal.$el.querySelector('input').focus()
+          this.$refs.form.show({
+            title: text
+          })
         })
         return
       }
       this.addCard(id, text)
     },
 
-    onAddFullItem () {
-      const data = this.form
-      this.addCard(data.listId, data.title, data.description, data.date)
-      this.onCancelFullItem()
+    onAddFullItem (data) {
+      this.addCard(this.activeListId, data.title, data.description, data.date)
+      this.onModalClose()
     },
 
-    onCancelFullItem () {
-      this.focusInput(this.form.listId)
-      this.form = form()
+    onModalClose () {
+      this.focusInput(this.activeListId)
       this.modal = false
     },
 

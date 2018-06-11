@@ -8,7 +8,7 @@
  * @param {*}       event.payload       Any payload associated with the move
  * @returns {*}
  */
-export const applyDrag = (arr, event) => {
+export function updateArray (arr, event) {
   const { removedIndex, addedIndex, payload } = event
   if (removedIndex === null && addedIndex === null) return arr
 
