@@ -6,54 +6,54 @@
         <ui-button :disabled="lists.length === 0" @click="reset">Reset</ui-button>
       </div>
 
-      <Container
-        lock-axis="x"
-        orientation="horizontal"
-        drag-handle-selector=".list-drag-handle"
-        @drop="onListDrop"
-      >
-        <Draggable v-for="list in lists" :key="list.id">
-          <section class="list-container" ref="list" :data-id="list.id">
+      <div class="lists-container">
 
-            <div class="list-header">
-              <span class="list-drag-handle">&#x2630;</span>
-              {{ list.title }}
-            </div>
+        <Container
+          lock-axis="x"
+          orientation="horizontal"
+          drag-handle-selector=".list-drag-handle"
+          @drop="onListDrop"
+        >
+          <Draggable v-for="list in lists" :key="list.id">
+            <section class="list-container" ref="list" :data-id="list.id">
 
-            <Container
-              group-name="list"
-              drag-class="card-ghost"
-              drop-class="card-ghost-drop"
-              non-drag-area-selector=".icon"
-              :animation-duration="100"
-              :get-child-payload="getItemPayload(list.id)"
-              @drop="e => onCardDrop(list.id, e)"
-            >
-              <Draggable v-for="item in list.items" :key="item.id">
-                <Card :item="item" @edit="editItem"/>
-              </Draggable>
+              <div class="list-header">
+                <span class="list-drag-handle">&#x2630;</span>
+                {{ list.title }}
+              </div>
 
-            </Container>
+              <Container
+                group-name="list"
+                drag-class="card-ghost"
+                drop-class="card-ghost-drop"
+                non-drag-area-selector=".icon"
+                :animation-duration="100"
+                :get-child-payload="getItemPayload(list.id)"
+                @drop="e => onCardDrop(list.id, e)"
+              >
+                <Draggable v-for="item in list.items" :key="item.id">
+                  <Card :item="item" @edit="editItem"/>
+                </Draggable>
 
-            <div class="item-entry">
-              <ui-item-entry :list-id="list.id"
-                             placeholder="Add an item"
-                             icon="ellipsis-h"
-                             @enter="onAddItem"/>
-            </div>
+              </Container>
 
-          </section>
+              <div class="item-entry">
+                <ui-item-entry :list-id="list.id"
+                               placeholder="Add an item"
+                               icon="ellipsis-h"
+                               @enter="onAddItem"/>
+              </div>
 
-        </Draggable>
+            </section>
 
-        <Draggable>
-          <section class="new-list">
-            <ui-item-entry placeholder="Add a list"
-                           @enter="onAddList"/>
-          </section>
-        </Draggable>
+          </Draggable>
 
-      </Container>
+        </Container>
+
+        <div class="new-list">
+          <ui-item-entry placeholder="Add a list" @enter="onAddList"/>
+        </div>
+      </div>
 
     </div>
 
@@ -194,13 +194,22 @@ export default {
     }
   }
 
+  $column-width: 320px;
+
   .list-container {
-    width: 320px;
+    width: $column-width;
     padding: 10px;
     margin: 5px;
     margin-right: 20px;
     background-color: #f3f3f3;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.24);
+  }
+
+  .lists-container {
+    > * {
+      display: inline-block;
+      vertical-align: top;
+    }
   }
 
   .list-header {
@@ -237,6 +246,11 @@ export default {
     padding-top: 10px;
     margin-top: 10px;
     border-top: 1px solid #DDD;
+  }
+
+  .new-list {
+    width: $column-width;
+    margin-left: -10px;
   }
 
   .clear-button {
