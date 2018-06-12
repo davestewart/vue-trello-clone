@@ -24,12 +24,13 @@
               group-name="list"
               drag-class="card-ghost"
               drop-class="card-ghost-drop"
+              non-drag-area-selector=".icon"
               :animation-duration="100"
               :get-child-payload="getItemPayload(list.id)"
               @drop="e => onCardDrop(list.id, e)"
             >
               <Draggable v-for="item in list.items" :key="item.id">
-                <Card :item="item"/>
+                <Card :item="item" @edit="editItem"/>
               </Draggable>
 
             </Container>
@@ -37,7 +38,7 @@
             <div class="item-entry">
               <ui-item-entry :list-id="list.id"
                              placeholder="Add an item"
-                             icon="edit"
+                             icon="ellipsis-h"
                              @enter="onAddItem"/>
             </div>
 
@@ -59,11 +60,11 @@
     <ui-modal ref="modal"
               :active="modal"
               :cancellable="1"
-              @close="onModalClose"
+              @close="hideModal"
     >
       <UiItemForm ref="form"
                   @submit="onAddFullItem"
-                  @cancel="onModalClose"/>
+                  @cancel="hideModal"/>
     </ui-modal>
 
   </div>
@@ -110,7 +111,7 @@ export default {
       }
     },
 
-    onAddList ({text}) {
+    onAddList ({ text }) {
       this.$store.commit('addList', { title: text })
       this.$nextTick(() => {
         const lists = this.$refs.list
@@ -124,28 +125,25 @@ export default {
       if (more) {
         this.activeListId = id
         this.modal = true
-        this.$nextTick(() => {
-          this.$refs.form.show({
-            title: text
-          })
-        })
+        this.showModal({ title: text })
         return
       }
       this.addItem(id, text)
     },
 
-    onAddFullItem (data) {
-      this.addItem(this.activeListId, data.title, data.description, data.date)
-      this.onModalClose()
-    },
-
-    onModalClose () {
-      this.focusInput(this.activeListId)
-      this.modal = false
+    onAddFullItem (item) {
+      item.id
+        ? this.$store.commit('updateItem', { itemId: item.id, ...item })
+        : this.addItem(this.activeListId, item.title, item.description, item.date)
+      this.hideModal()
     },
 
     addItem (listId, title, description, date) {
       this.$store.commit('addItem', { listId, title, description, date })
+    },
+
+    editItem (item) {
+      this.showModal(item)
     },
 
     getItemPayload: function (listId) {
@@ -155,16 +153,30 @@ export default {
       }
     },
 
+    showModal (item) {
+      this.modal = true
+      this.$nextTick(() => {
+        this.$refs.form.show(item)
+      })
+    },
+
+    hideModal () {
+      this.focusInput(this.activeListId)
+      this.modal = false
+    },
+
     focusInput (listId) {
       const index = this.lists.findIndex(list => list.id === listId)
-      this.$refs.list[index].querySelector('input').focus()
+      if (index > -1) {
+        this.$refs.list[index].querySelector('input').focus()
+      }
     },
 
     reset () {
       if (confirm('Are you sure you want to reset the board?')) {
         this.$store.commit('reset')
       }
-    }
+    },
   }
 }
 </script>

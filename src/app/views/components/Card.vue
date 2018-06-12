@@ -8,6 +8,9 @@
       <span v-else-if="timestamp" class="icon icon-date" :title="`Item is due on ${item.date}`">
         <i class="far fa-bell"></i>
       </span>
+      <span class="icon icon-edit" @click="edit">
+        <i class="fas fa-edit"></i>
+      </span>
     </div>
     <p>{{ item.title }}</p>
     <p class="description" v-if="item.description">{{ item.description }}</p>
@@ -45,6 +48,12 @@ export default {
       return date > now && now > due
     },
   },
+
+  methods: {
+    edit () {
+      this.$emit('edit', this.item)
+    }
+  }
 }
 
 </script>
@@ -79,6 +88,7 @@ export default {
     }
   }
 
+  .icon-edit,
   .icon-date {
     color: #DDD;
   }

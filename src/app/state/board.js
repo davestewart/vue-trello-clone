@@ -1,6 +1,4 @@
-import { getListById, getListByItemId, updateArray, card, list, dummy } from 'app/utils/board'
-
-const storage = window.localStorage
+import { card, getItemById, getListById, getListByItemId, list, updateArray } from 'app/utils/board'
 
 const state = {
   lists: [],
@@ -14,15 +12,10 @@ const getters = {
   getListByItemId: state => itemId => {
     return getListByItemId(state.lists, itemId)
   },
-}
 
-const actions = {
-  load ({ commit }, mock) {
-    const lists = mock
-      ? dummy()
-      : storage.getItem('lists')
-    commit('lists', lists || [])
-  },
+  getItemById: state => itemId => {
+    return getItemById(state.lists, itemId)
+  }
 }
 
 const mutations = {
@@ -52,6 +45,13 @@ const mutations = {
     list.items.push(card(title, description, date))
   },
 
+  updateItem (state, { itemId, title, description, date }) {
+    const item = getItemById(state.lists, itemId)
+    if (item) {
+      Object.assign(item, card(title, description, date, itemId))
+    }
+  },
+
   moveItem (state, { listId, removedIndex, addedIndex, payload }) {
     // find containing list of item
     const list = getListById(state.lists, listId)
@@ -73,7 +73,6 @@ const mutations = {
 
 export default {
   state,
-  actions,
   mutations,
   getters,
 }
