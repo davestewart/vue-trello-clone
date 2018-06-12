@@ -3,24 +3,26 @@
   <div class="query-form card">
     <div class="card-content">
       <h2 class="title">New task</h2>
-      <ui-input ref="title"
+      <ui-input name="title"
                 label="Title"
                 v-model="title"
-                @enter="submit"
+                v-validate="'required'"
+                :error="getError('title')"
+                @enter="validate"
       />
-      <ui-input ref="description"
+      <ui-input name="description"
+                type="textarea"
                 label="Description"
                 v-model="description"
-                type="textarea"
       />
-      <ui-input ref="date"
+      <ui-input name="date"
+                type="date"
                 label="Date"
                 v-model="date"
-                type="date"
-                @enter="submit"
+                @enter="validate"
       />
       <div class="field is-grouped">
-        <ui-button type="primary" @click="submit">Add</ui-button>
+        <ui-button type="primary" @click="validate">Add</ui-button>
         <ui-button type="text" @click="cancel">Cancel</ui-button>
       </div>
     </div>
@@ -32,6 +34,7 @@
 
 function data () {
   return {
+    message: '',
     title: '',
     description: '',
     date: null
@@ -55,6 +58,17 @@ export default {
       this.$el.querySelector('input').focus()
     },
 
+    validate () {
+      this.$validator
+        .validate()
+        .then(state => {
+          if (state) {
+            return this.submit()
+          }
+          this.message = 'Please complete the required fields!'
+        })
+    },
+
     submit () {
       this.$emit('submit', this.values)
       this.reset()
@@ -67,6 +81,10 @@ export default {
 
     reset () {
       Object.assign(this, data())
+    },
+
+    getError (name) {
+      return (this.errors.first(name) || '').replace(/The .+ field/, 'This field')
     }
   }
 }
