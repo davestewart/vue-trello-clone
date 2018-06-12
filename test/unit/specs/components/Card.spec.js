@@ -1,3 +1,5 @@
+import { text } from '../../helpers'
+
 import Vue from 'vue'
 import { makeItem } from '@/app/utils/data'
 import Card from '@/app/views/elements/Card'
@@ -10,9 +12,9 @@ describe('Card.vue', () => {
         item: makeItem('Go to the shop', 'Buy milk')
       }
     }).$mount()
-    expect(vm.$el.querySelector('.item-title').textContent)
+    expect(text(vm, '.item-title'))
       .toEqual('Go to the shop')
-    expect(vm.$el.querySelector('.item-description').textContent)
+    expect(text(vm, '.item-description'))
       .toEqual('Buy milk')
   })
 })

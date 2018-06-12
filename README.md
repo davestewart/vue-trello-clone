@@ -47,6 +47,7 @@ npm run build --report
 
 # run unit tests
 npm run unit
+npm run unit:watch
 
 # run all tests
 npm test
