@@ -34,11 +34,15 @@ export function getListByItemId (lists, itemId) {
   return lists.find(list => list.items.find(item => item.id === itemId))
 }
 
-export function card (title, description, date) {
-  const id = uuidv1()
-  if (date) {
-    date = Number(new Date(date))
+export function getItemById (lists, itemId) {
+  const list = lists.find(list => list.items.find(item => item.id === itemId))
+  if (list) {
+    return list.items.find(item => item.id === itemId)
   }
+}
+
+export function card (title, description, date, id = null) {
+  id = id || uuidv1()
   return { id, title, description, date }
 }
 

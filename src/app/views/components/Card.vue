@@ -1,9 +1,14 @@
 <template>
 
   <div class="card" :class="classes" :data-id="item.id">
-    <span v-if="isDue" class="icon has-text-warning">
-      <i class="fas fa-star"></i>
-    </span>
+    <div class="icons">
+      <span v-if="isDue" class="icon icon-due has-text-warning" :title="`Item is due on ${item.date}`">
+        <i class="fas fa-star"></i>
+      </span>
+      <span v-else-if="timestamp" class="icon icon-date" :title="`Item is due on ${item.date}`">
+        <i class="far fa-bell"></i>
+      </span>
+    </div>
     <p>{{ item.title }}</p>
     <p class="description" v-if="item.description">{{ item.description }}</p>
   </div>
@@ -25,20 +30,16 @@ export default {
       }
     },
 
-    date () {
-      return this.item.date
-    },
-
-    dateLabel () {
-      return new Date(this.date)
+    timestamp () {
+      return Number(new Date(this.item.date))
     },
 
     isOverdue () {
-      return !!this.date && this.date < Date.now()
+      return this.timestamp && this.timestamp < Date.now()
     },
 
     isDue () {
-      const date = this.date
+      const date = this.timestamp
       const due = date - (1000 * 60 * 60 * 24) * 3
       const now = Date.now()
       return date > now && now > due
@@ -59,14 +60,34 @@ export default {
     font-size: 0.7em;
   }
 
-  .icon {
+  .icons {
     position: absolute;
     top: 10px;
     right: 10px;
+    cursor: pointer;
   }
 
   .is-overdue {
     color: red;
     border: 1px solid red;
+  }
+
+  .card:hover {
+    .icon-due,
+    .icon-date {
+      display: none;
+    }
+  }
+
+  .icon-date {
+    color: #DDD;
+  }
+
+  .icon-edit {
+    display: none;
+    margin-right: -5px;
+    .card:hover & {
+      display: block;
+    }
   }
 </style>

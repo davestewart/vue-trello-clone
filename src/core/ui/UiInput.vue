@@ -35,7 +35,7 @@ export default {
   extends: field,
   props: {
     type: {
-      type: String,
+      type: [String, Number],
       default: 'text'
     }
   },

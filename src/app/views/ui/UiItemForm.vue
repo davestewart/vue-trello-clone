@@ -34,10 +34,11 @@
 
 function data () {
   return {
-    message: '',
+    id: null,
     title: '',
     description: '',
-    date: null
+    date: null,
+    message: '',
   }
 }
 
