@@ -10,7 +10,7 @@ export function makeList (title, items = []) {
   return { id, title, items }
 }
 
-export function dummy () {
+export function makeData () {
   return [
     makeList('One', [
       makeItem('1 1'),

@@ -13,6 +13,7 @@
     "lint": "eslint --ext .js,.vue src test/unit",
     "build": "node build/build.js"
   },
+  "main": "src/app/main.js",
   "dependencies": {
     "bulma": "^0.7.1",
     "lodash": "^4.17.10",
