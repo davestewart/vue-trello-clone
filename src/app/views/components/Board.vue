@@ -203,6 +203,10 @@ export default {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 1px 1px rgba(0, 0, 0, 0.24);
   }
 
+  .list-header {
+    margin-bottom: 5px;
+  }
+
   .card {
     margin: 5px;
     background-color: white;

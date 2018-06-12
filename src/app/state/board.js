@@ -1,4 +1,5 @@
-import { card, getItemById, getListById, getListByItemId, list, updateArray } from 'app/utils/board'
+import { card, list } from 'app/utils/objects'
+import { getItemById, getListById, getListByItemId, updateArray } from 'app/utils/board'
 
 const state = {
   lists: [],
