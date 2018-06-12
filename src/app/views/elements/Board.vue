@@ -14,11 +14,10 @@
           drag-handle-selector=".list-drag-handle"
           @drop="onListDrop"
         >
-          <Draggable v-for="list in lists" :key="list.id">
+          <Draggable v-for="(list, listIndex) in lists" :key="list.id">
             <section class="list-container" ref="list" :data-id="list.id">
 
               <div class="list-header">
-                {{ list.id }}
                 <span class="list-drag-handle">&#x2630;</span>
                 {{ list.title }}
               </div>
@@ -29,8 +28,7 @@
                 drop-class="card-ghost-drop"
                 non-drag-area-selector=".icon"
                 :animation-duration="100"
-                :get-child-payload="getItemPayload(list.id)"
-                @drop="e => onCardDrop(list.id, e)"
+                @drop="e => onCardDrop(listIndex, e)"
               >
                 <Draggable v-for="item in list.items" :key="item.id">
                   <Card :item="item" @edit="editItem"/>
@@ -78,6 +76,7 @@ import { Container, Draggable } from 'vue-smooth-dnd'
 import Card from './Card'
 import UiItemForm from '../ui/UiItemForm'
 import UiItemEntry from '../ui/UiItemEntry'
+import { makeDropHandler } from '../../utils/plugins'
 
 export default {
   components: {
@@ -141,20 +140,10 @@ export default {
       this.$store.commit('moveList', event)
     },
 
-    onCardDrop: function (listId, event) {
-      // TODO needs refactoring. Drop event fires twice; once for remove, once for add
-      // @see https://github.com/kutlugsahin/vue-smooth-dnd/issues/16#issuecomment-396571533
-      if (event.removedIndex !== null || event.addedIndex !== null) {
-        this.$store.commit('moveItem', { listId, ...event })
-      }
-    },
+    onCardDrop: makeDropHandler('onCardDropComplete'),
 
-    getItemPayload: function (listId) {
-      // TODO refactor this to use item id only; will make for more decoupled store moves
-      return index => {
-        const list = this.$store.getters['getListById'](listId)
-        return list.items[index]
-      }
+    onCardDropComplete (...args) {
+      this.$store.commit('moveItem', args)
     },
 
     showModal (item) {

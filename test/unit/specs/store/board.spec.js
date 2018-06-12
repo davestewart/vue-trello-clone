@@ -63,12 +63,8 @@ describe('board mutations', () => {
   })
 
   test('moveItem should move an item to another list', () => {
-    const source = state.lists[0]
-    const target = state.lists[1]
-    const payload = copy(source.items[0])
-    // TODO Vue Smooth DND has a f*ing *weird* moving mechanism
-    moveItem(state, { listId: source.id, removedIndex: 0, addedIndex: null, payload })
-    moveItem(state, { listId: target.id, removedIndex: null, addedIndex: 0, payload })
+    const payload = copy(state.lists[0].items[0])
+    moveItem(state, [0, 0, 1, 0])
     expect(state.lists[1].items[0]).toEqual(payload)
   })
 })

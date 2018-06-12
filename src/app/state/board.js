@@ -55,17 +55,14 @@ export const mutations = {
     }
   },
 
-  moveItem (state, { listId, removedIndex, addedIndex, payload }) {
-    // find containing list of item
-    const list = getListById(state.lists, listId)
-
-    // copy list and move item
-    const newList = Object.assign({}, list)
-    newList.items = updateArray(newList.items, removedIndex, addedIndex, payload)
-
-    // replace old list with copy
-    const listIndex = state.lists.indexOf(list)
-    state.lists.splice(listIndex, 1, newList)
+  moveItem (state, [fromListRef, fromIndex, toListRef, toIndex]) {
+    const fromList = typeof fromListRef === 'number'
+      ? state.lists[fromListRef].items
+      : getListById(state.lists, fromListRef)
+    const toList = typeof toListRef === 'number'
+      ? state.lists[toListRef].items
+      : getListById(state.lists, toListRef)
+    toList.splice(toIndex, 0, fromList.splice(fromIndex, 1)[0])
   },
 
   removeItem (state, { itemId }) {
