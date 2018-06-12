@@ -22,7 +22,7 @@
                 @enter="validate"
       />
       <div class="field is-grouped">
-        <ui-button type="primary" @click="validate">Add</ui-button>
+        <ui-button type="primary" @click="validate">{{ id ? 'Update' : 'Add' }}</ui-button>
         <ui-button type="text" @click="cancel">Cancel</ui-button>
       </div>
     </div>
