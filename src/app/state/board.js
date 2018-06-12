@@ -1,5 +1,5 @@
 import { makeItem, makeList } from 'app/utils/data'
-import { getItemById, getListById, getListByItemId, updateArray } from 'app/utils/board'
+import { getItemById, getListById, getListByItemId } from 'app/utils/board'
 
 export function state () {
   return {
@@ -34,8 +34,8 @@ export const mutations = {
     state.lists.push(makeList(title))
   },
 
-  moveList (state, { removedIndex, addedIndex }) {
-    state.lists = updateArray(state.lists, removedIndex, addedIndex)
+  moveList (state, [fromIndex, toIndex]) {
+    state.lists.splice(toIndex, 0, state.lists.splice(fromIndex, 1)[0])
   },
 
   removeList (state, { listId }) {

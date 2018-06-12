@@ -28,7 +28,7 @@
                 drop-class="card-ghost-drop"
                 non-drag-area-selector=".icon"
                 :animation-duration="100"
-                @drop="e => onCardDrop(listIndex, e)"
+                @drop="e => onCardDrop(e, list, listIndex)"
               >
                 <Draggable v-for="item in list.items" :key="item.id">
                   <Card :item="item" @edit="editItem"/>
@@ -136,14 +136,21 @@ export default {
       this.showModal(item)
     },
 
-    onListDrop: function (event) {
-      this.$store.commit('moveList', event)
+    onListDrop: makeDropHandler('onListDropComplete'),
+
+    onListDropComplete: function (src, trg) {
+      this.$store.commit('moveList', [src.index, trg.index])
     },
 
     onCardDrop: makeDropHandler('onCardDropComplete'),
 
-    onCardDropComplete (...args) {
-      this.$store.commit('moveItem', args)
+    onCardDropComplete (src, trg, element, payload) {
+      this.$store.commit('moveItem', [
+        src.params[1],
+        src.index,
+        trg.params[1],
+        trg.index,
+      ])
     },
 
     showModal (item) {
