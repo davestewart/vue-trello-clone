@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Board from 'components/Board'
+import Board from 'elements/Board'
 export default {
   components: {
     Board

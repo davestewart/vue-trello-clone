@@ -18,6 +18,7 @@
             <section class="list-container" ref="list" :data-id="list.id">
 
               <div class="list-header">
+                {{ list.id }}
                 <span class="list-drag-handle">&#x2630;</span>
                 {{ list.title }}
               </div>
@@ -101,16 +102,6 @@ export default {
   },
 
   methods: {
-    onListDrop: function (event) {
-      this.$store.commit('moveList', event)
-    },
-
-    onCardDrop: function (listId, event) {
-      if (event.removedIndex !== null || event.addedIndex !== null) {
-        this.$store.commit('moveItem', { listId, ...event })
-      }
-    },
-
     onAddList ({ text }) {
       this.$store.commit('addList', { title: text })
       this.$nextTick(() => {
@@ -146,7 +137,20 @@ export default {
       this.showModal(item)
     },
 
+    onListDrop: function (event) {
+      this.$store.commit('moveList', event)
+    },
+
+    onCardDrop: function (listId, event) {
+      // TODO needs refactoring. Drop event fires twice; once for remove, once for add
+      // @see https://github.com/kutlugsahin/vue-smooth-dnd/issues/16#issuecomment-396571533
+      if (event.removedIndex !== null || event.addedIndex !== null) {
+        this.$store.commit('moveItem', { listId, ...event })
+      }
+    },
+
     getItemPayload: function (listId) {
+      // TODO refactor this to use item id only; will make for more decoupled store moves
       return index => {
         const list = this.$store.getters['getListById'](listId)
         return list.items[index]

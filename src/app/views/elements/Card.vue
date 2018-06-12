@@ -12,8 +12,10 @@
         <i class="fas fa-edit"></i>
       </span>
     </div>
-    <p>{{ item.title }}</p>
-    <p class="description" v-if="item.description">{{ item.description }}</p>
+    <div>
+      <p class="item-title">{{ item.title }}</p>
+      <p class="item-description" v-if="item.description">{{ item.description }}</p>
+    </div>
   </div>
 
 </template>
@@ -65,7 +67,7 @@ export default {
     cursor: default;
   }
 
-  .description {
+  .item-description {
     font-size: 0.7em;
   }
 

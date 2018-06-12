@@ -1,8 +1,10 @@
-import { card, list } from 'app/utils/objects'
+import { makeItem, makeList } from 'app/utils/data'
 import { getItemById, getListById, getListByItemId, updateArray } from 'app/utils/board'
 
-const state = {
-  lists: [],
+export function state () {
+  return {
+    lists: [],
+  }
 }
 
 const getters = {
@@ -19,7 +21,7 @@ const getters = {
   }
 }
 
-const mutations = {
+export const mutations = {
   lists (state, value) {
     state.lists = value
   },
@@ -29,7 +31,7 @@ const mutations = {
   },
 
   addList (state, { title }) {
-    state.lists.push(list(title))
+    state.lists.push(makeList(title))
   },
 
   moveList (state, { removedIndex, addedIndex }) {
@@ -43,13 +45,13 @@ const mutations = {
 
   addItem (state, { listId, title, description, date }) {
     const list = getListById(state.lists, listId)
-    list.items.push(card(title, description, date))
+    list.items.push(makeItem(title, description, date))
   },
 
   updateItem (state, { itemId, title, description, date }) {
     const item = getItemById(state.lists, itemId)
     if (item) {
-      Object.assign(item, card(title, description, date, itemId))
+      Object.assign(item, makeItem(title, description, date, itemId))
     }
   },
 

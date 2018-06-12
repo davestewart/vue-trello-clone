@@ -44,9 +44,9 @@ module.exports = {
 
       // app
       'views'       : resolve('app/views'),
-      'components'  : resolve('app/views/components'),
       'pages'       : resolve('app/views/pages'),
-      'site'        : resolve('app/views/site'),
+      'elements'    : resolve('app/views/elements'),
+      'ui'          : resolve('app/views/ui'),
 
       // core
       'utils'       : resolve('core/utils'),
