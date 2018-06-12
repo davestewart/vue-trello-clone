@@ -1,8 +1,11 @@
 # Vue Trello Clone
 
-A simple Trello clone in Vue, Vuex and Bulma.
+A simple Trello clone in Vue, Vuex and Bulma
 
 ![screenshot](docs/screenshot.png)
+
+
+## Features
 
 Trello features
 
@@ -19,6 +22,7 @@ Task functionality
 UI features
 
 - Fast keyboard interaction
+- Smooth animation
 
 State management
 
